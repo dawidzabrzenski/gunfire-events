@@ -4,6 +4,7 @@ const {
   createUser,
   findByEmail,
   findByUsername,
+  findById,
 } = require("../models/userModel");
 
 const register = async (req, res) => {
@@ -18,6 +19,7 @@ const register = async (req, res) => {
     group_link,
     facebook_link,
     role,
+    is_active,
   } = req.body;
 
   try {
@@ -44,6 +46,7 @@ const register = async (req, res) => {
       group_link,
       facebook_link,
       role,
+      is_active: role === "organizer" ? false : true,
     });
 
     const token = jwt.sign(
@@ -75,10 +78,15 @@ const login = async (req, res) => {
     }
 
     const match = await bcrypt.compare(password, user.password);
-    console.log("Password match:", match);
 
     if (!match) {
       return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    if (!user.is_active && user.role === "organizer") {
+      return res.status(403).json({
+        message: "Konto organizatora wymaga aktywacji przez administratora",
+      });
     }
 
     const token = jwt.sign(
@@ -104,4 +112,22 @@ const logout = (req, res) => {
   res.clearCookie("token").json({ message: "Logged out" });
 };
 
-module.exports = { register, login, logout };
+const getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...userWithoutPassword } = user;
+
+    res.json({ user: userWithoutPassword });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { register, login, logout, getCurrentUser };

@@ -12,11 +12,12 @@ module.exports = {
     group_link,
     facebook_link,
     role = "user",
+    is_active = true,
   }) => {
     const res = await pool.query(
-      `INSERT INTO users (first_name, last_name, email, username, password, phone, voivodeship_id, group_link, facebook_link, role)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      RETURNING id, first_name, last_name, email, username, role`,
+      `INSERT INTO users (first_name, last_name, email, username, password, phone, voivodeship_id, group_link, facebook_link, role, is_active)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      RETURNING id, first_name, last_name, email, username, role, is_active`,
       [
         first_name,
         last_name,
@@ -28,6 +29,7 @@ module.exports = {
         group_link,
         facebook_link,
         role,
+        is_active,
       ]
     );
     return res.rows[0];
