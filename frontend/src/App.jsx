@@ -18,7 +18,29 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes></Routes>
+        <NavBar />
+        <div className="bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            <Route
+              element={
+                <ProtectedRoute allowedRoles={["user", "admin", "organizer"]} />
+              }
+            >
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+
+            <Route
+              element={<ProtectedRoute allowedRoles={["admin"]} />}
+            ></Route>
+
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+        <Footer />
       </Router>
     </AuthProvider>
   );
