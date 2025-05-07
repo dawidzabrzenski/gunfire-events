@@ -8,37 +8,41 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
+    <div className="mx-auto max-w-4xl rounded-lg p-6 transition-colors duration-500">
+      <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <button
           onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-600"
         >
           Wyloguj
         </button>
       </div>
 
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <h2 className="text-xl font-semibold mb-4">Twój profil</h2>
+      <div className="mb-6 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+        <h2 className="mb-4 text-xl font-semibold">Twój profil</h2>
         {user && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-gray-600">Imię i nazwisko</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                Imię i nazwisko
+              </p>
               <p className="font-medium">
                 {user.first_name} {user.last_name}
               </p>
             </div>
             <div>
-              <p className="text-gray-600">Nazwa użytkownika</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                Nazwa użytkownika
+              </p>
               <p className="font-medium">{user.username}</p>
             </div>
             <div>
-              <p className="text-gray-600">Email</p>
+              <p className="text-gray-600 dark:text-gray-400">Email</p>
               <p className="font-medium">{user.email}</p>
             </div>
             <div>
-              <p className="text-gray-600">Rola</p>
+              <p className="text-gray-600 dark:text-gray-400">Rola</p>
               <p className="font-medium capitalize">{user.role}</p>
             </div>
           </div>

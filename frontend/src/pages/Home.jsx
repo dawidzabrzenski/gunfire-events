@@ -5,11 +5,11 @@ const Home = () => {
   const { user } = useAuth();
 
   return (
-    <div className="transition-colors duration-500 ">
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Test</h1>
-          <p className="text-xl text-gray-600 mb-8">Test events</p>
+    <div className="transition-colors duration-500">
+      <div className="mx-auto max-w-6xl px-4 py-16">
+        <div className="mb-16 text-center">
+          <h1 className="mb-6 text-4xl font-bold md:text-6xl">Test</h1>
+          <p className="mb-8 text-xl text-gray-600">Test events</p>
 
           <div className="flex flex-wrap justify-center gap-4">
             {user ? (

@@ -20,7 +20,7 @@ const RegisterForm = () => {
       const { confirmPassword, ...userData } = data;
 
       await registerUser(userData);
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error) {
       console.error("Registration error:", error);
     } finally {
@@ -29,25 +29,27 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+    <div className="mx-auto mt-10 rounded-lg bg-white p-6 shadow-md">
+      <h2 className="mb-6 text-center text-2xl font-bold">
+        Zarejestruj nowego użytkownika
+      </h2>
 
       {authError && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+        <div className="mb-4 rounded bg-red-100 p-3 text-red-700">
           {authError}
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="mb-4 grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-gray-700 mb-2" htmlFor="first_name">
-              First Name
+            <label className="mb-2 block text-gray-700" htmlFor="first_name">
+              Imię
             </label>
             <input
               id="first_name"
               type="text"
-              className={`w-full p-2 border rounded ${
+              className={`w-full rounded border p-2 ${
                 errors.first_name ? "border-red-500" : "border-gray-300"
               }`}
               {...register("first_name", {
@@ -55,26 +57,26 @@ const RegisterForm = () => {
               })}
             />
             {errors.first_name && (
-              <p className="mt-1 text-red-500 text-sm">
+              <p className="mt-1 text-sm text-red-500">
                 {errors.first_name.message}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2" htmlFor="last_name">
-              Last Name
+            <label className="mb-2 block text-gray-700" htmlFor="last_name">
+              Nazwisko
             </label>
             <input
               id="last_name"
               type="text"
-              className={`w-full p-2 border rounded ${
+              className={`w-full rounded border p-2 ${
                 errors.last_name ? "border-red-500" : "border-gray-300"
               }`}
               {...register("last_name", { required: "Last name is required" })}
             />
             {errors.last_name && (
-              <p className="mt-1 text-red-500 text-sm">
+              <p className="mt-1 text-sm text-red-500">
                 {errors.last_name.message}
               </p>
             )}
@@ -82,13 +84,13 @@ const RegisterForm = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="email">
+          <label className="mb-2 block text-gray-700" htmlFor="email">
             Email
           </label>
           <input
             id="email"
             type="email"
-            className={`w-full p-2 border rounded ${
+            className={`w-full rounded border p-2 ${
               errors.email ? "border-red-500" : "border-gray-300"
             }`}
             {...register("email", {
@@ -100,18 +102,18 @@ const RegisterForm = () => {
             })}
           />
           {errors.email && (
-            <p className="mt-1 text-red-500 text-sm">{errors.email.message}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
           )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="username">
+          <label className="mb-2 block text-gray-700" htmlFor="username">
             Username
           </label>
           <input
             id="username"
             type="text"
-            className={`w-full p-2 border rounded ${
+            className={`w-full rounded border p-2 ${
               errors.username ? "border-red-500" : "border-gray-300"
             }`}
             {...register("username", {
@@ -123,37 +125,37 @@ const RegisterForm = () => {
             })}
           />
           {errors.username && (
-            <p className="mt-1 text-red-500 text-sm">
+            <p className="mt-1 text-sm text-red-500">
               {errors.username.message}
             </p>
           )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="phone">
+          <label className="mb-2 block text-gray-700" htmlFor="phone">
             Phone
           </label>
           <input
             id="phone"
             type="tel"
-            className={`w-full p-2 border rounded ${
+            className={`w-full rounded border p-2 ${
               errors.phone ? "border-red-500" : "border-gray-300"
             }`}
             {...register("phone", { required: "Phone number is required" })}
           />
           {errors.phone && (
-            <p className="mt-1 text-red-500 text-sm">{errors.phone.message}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
           )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="voivodeship_id">
+          <label className="mb-2 block text-gray-700" htmlFor="voivodeship_id">
             Voivodeship ID
           </label>
           <input
             id="voivodeship_id"
             type="number"
-            className={`w-full p-2 border rounded ${
+            className={`w-full rounded border p-2 ${
               errors.voivodeship_id ? "border-red-500" : "border-gray-300"
             }`}
             {...register("voivodeship_id", {
@@ -161,44 +163,44 @@ const RegisterForm = () => {
             })}
           />
           {errors.voivodeship_id && (
-            <p className="mt-1 text-red-500 text-sm">
+            <p className="mt-1 text-sm text-red-500">
               {errors.voivodeship_id.message}
             </p>
           )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="group_link">
+          <label className="mb-2 block text-gray-700" htmlFor="group_link">
             Group Link (optional)
           </label>
           <input
             id="group_link"
             type="url"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded border border-gray-300 p-2"
             {...register("group_link")}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="facebook_link">
+          <label className="mb-2 block text-gray-700" htmlFor="facebook_link">
             Facebook Link (optional)
           </label>
           <input
             id="facebook_link"
             type="url"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full rounded border border-gray-300 p-2"
             {...register("facebook_link")}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="password">
+          <label className="mb-2 block text-gray-700" htmlFor="password">
             Password
           </label>
           <input
             id="password"
             type="password"
-            className={`w-full p-2 border rounded ${
+            className={`w-full rounded border p-2 ${
               errors.password ? "border-red-500" : "border-gray-300"
             }`}
             {...register("password", {
@@ -210,20 +212,20 @@ const RegisterForm = () => {
             })}
           />
           {errors.password && (
-            <p className="mt-1 text-red-500 text-sm">
+            <p className="mt-1 text-sm text-red-500">
               {errors.password.message}
             </p>
           )}
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 mb-2" htmlFor="confirmPassword">
+          <label className="mb-2 block text-gray-700" htmlFor="confirmPassword">
             Confirm Password
           </label>
           <input
             id="confirmPassword"
             type="password"
-            className={`w-full p-2 border rounded ${
+            className={`w-full rounded border p-2 ${
               errors.confirmPassword ? "border-red-500" : "border-gray-300"
             }`}
             {...register("confirmPassword", {
@@ -233,7 +235,7 @@ const RegisterForm = () => {
             })}
           />
           {errors.confirmPassword && (
-            <p className="mt-1 text-red-500 text-sm">
+            <p className="mt-1 text-sm text-red-500">
               {errors.confirmPassword.message}
             </p>
           )}
@@ -242,9 +244,9 @@ const RegisterForm = () => {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="focus:shadow-outline w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600 focus:outline-none"
         >
-          {submitting ? "Registering..." : "Register"}
+          {submitting ? "Rejestrowanie..." : "Zarejestruj"}
         </button>
       </form>
     </div>

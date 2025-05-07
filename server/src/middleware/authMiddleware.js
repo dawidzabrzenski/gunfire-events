@@ -11,4 +11,11 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-module.exports = { authenticateToken };
+const requireAdmin = (req, res, next) => {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ message: "Brak dostępu - tylko admin" });
+  }
+  next();
+};
+
+module.exports = { authenticateToken, requireAdmin };
