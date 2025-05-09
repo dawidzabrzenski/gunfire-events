@@ -3,13 +3,14 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const RegisterForm = () => {
+const RegisterForm = ({ success }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { register: registerUser, error: authError } = useAuth();
   const navigate = useNavigate();
@@ -17,10 +18,15 @@ const RegisterForm = () => {
   const onSubmit = async (data) => {
     setSubmitting(true);
     try {
+      const role = isOrganizer ? "organizer" : "user";
       const { confirmPassword, ...userData } = data;
 
-      await registerUser(userData);
-      navigate("/home");
+      if (userData.voivodeship_id === "") {
+        userData.voivodeship_id = null;
+      }
+
+      await registerUser({ ...userData, role });
+      navigate("/register", { state: { success: true } });
     } catch (error) {
       console.error("Registration error:", error);
     } finally {
@@ -28,8 +34,19 @@ const RegisterForm = () => {
     }
   };
 
+  if (success) {
+    return (
+      <div className="mx-auto mt-10 rounded-lg bg-green-100 p-6 text-center shadow-md dark:bg-gray-800">
+        <p className="text-xl font-semibold text-green-700">
+          Rejestracja zakończona sukcesem! Sprawdź skrzynkę e-mail i aktywuj
+          konto.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-auto mt-10 rounded-lg bg-white p-6 shadow-md">
+    <div className="mx-auto mt-10 rounded-lg bg-gray-100 p-6 shadow-md dark:bg-gray-800">
       <h2 className="mb-6 text-center text-2xl font-bold">
         Zarejestruj nowego użytkownika
       </h2>
@@ -41,6 +58,15 @@ const RegisterForm = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-stone-200 py-2">
+          <input
+            checked={isOrganizer}
+            onChange={() => setIsOrganizer((val) => !val)}
+            type="checkbox"
+            className="size-4"
+          />
+          <p className="font-bold">Zarejestruj jako organizator</p>
+        </div>
         <div className="mb-4 grid grid-cols-2 gap-4">
           <div>
             <label className="mb-2 block text-gray-700" htmlFor="first_name">
@@ -53,7 +79,7 @@ const RegisterForm = () => {
                 errors.first_name ? "border-red-500" : "border-gray-300"
               }`}
               {...register("first_name", {
-                required: "First name is required",
+                required: "Imię jest wymagane",
               })}
             />
             {errors.first_name && (
@@ -73,7 +99,7 @@ const RegisterForm = () => {
               className={`w-full rounded border p-2 ${
                 errors.last_name ? "border-red-500" : "border-gray-300"
               }`}
-              {...register("last_name", { required: "Last name is required" })}
+              {...register("last_name", { required: "Nazwisko jest wymagane" })}
             />
             {errors.last_name && (
               <p className="mt-1 text-sm text-red-500">
@@ -85,7 +111,7 @@ const RegisterForm = () => {
 
         <div className="mb-4">
           <label className="mb-2 block text-gray-700" htmlFor="email">
-            Email
+            Adres e-mail
           </label>
           <input
             id="email"
@@ -94,10 +120,10 @@ const RegisterForm = () => {
               errors.email ? "border-red-500" : "border-gray-300"
             }`}
             {...register("email", {
-              required: "Email is required",
+              required: "E-mail jest wymagany",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Invalid email address",
+                message: "Niepoprawny format adresu e-mail",
               },
             })}
           />
@@ -108,7 +134,7 @@ const RegisterForm = () => {
 
         <div className="mb-4">
           <label className="mb-2 block text-gray-700" htmlFor="username">
-            Username
+            Nazwa użytkownika
           </label>
           <input
             id="username"
@@ -117,10 +143,10 @@ const RegisterForm = () => {
               errors.username ? "border-red-500" : "border-gray-300"
             }`}
             {...register("username", {
-              required: "Username is required",
+              required: "Nazwa użytkownika jest wymagana",
               minLength: {
                 value: 3,
-                message: "Username must be at least 3 characters",
+                message: "Nazwa użytkownika musi mieć conajmniej 3 znaki",
               },
             })}
           />
@@ -133,7 +159,7 @@ const RegisterForm = () => {
 
         <div className="mb-4">
           <label className="mb-2 block text-gray-700" htmlFor="phone">
-            Phone
+            Numer telefonu (opcjonalne)
           </label>
           <input
             id="phone"
@@ -141,7 +167,7 @@ const RegisterForm = () => {
             className={`w-full rounded border p-2 ${
               errors.phone ? "border-red-500" : "border-gray-300"
             }`}
-            {...register("phone", { required: "Phone number is required" })}
+            {...register("phone")}
           />
           {errors.phone && (
             <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
@@ -150,18 +176,36 @@ const RegisterForm = () => {
 
         <div className="mb-4">
           <label className="mb-2 block text-gray-700" htmlFor="voivodeship_id">
-            Voivodeship ID
+            Województwo (opcjonalne)
           </label>
-          <input
+          <select
             id="voivodeship_id"
-            type="number"
             className={`w-full rounded border p-2 ${
               errors.voivodeship_id ? "border-red-500" : "border-gray-300"
             }`}
-            {...register("voivodeship_id", {
-              required: "Voivodeship ID is required",
-            })}
-          />
+            {...register("voivodeship_id")}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              -- Wybierz województwo --
+            </option>
+            <option value="1">Dolnośląskie</option>
+            <option value="2">Kujawsko-Pomorskie</option>
+            <option value="3">Lubelskie</option>
+            <option value="4">Lubuskie</option>
+            <option value="5">Łódzkie</option>
+            <option value="6">Małopolskie</option>
+            <option value="7">Mazowieckie</option>
+            <option value="8">Opolskie</option>
+            <option value="9">Podkarpackie</option>
+            <option value="10">Podlaskie</option>
+            <option value="11">Pomorskie</option>
+            <option value="12">Śląskie</option>
+            <option value="13">Świętokrzyskie</option>
+            <option value="14">Warmińsko-Mazurskie</option>
+            <option value="15">Wielkopolskie</option>
+            <option value="16">Zachodniopomorskie</option>
+          </select>
           {errors.voivodeship_id && (
             <p className="mt-1 text-sm text-red-500">
               {errors.voivodeship_id.message}
@@ -169,33 +213,37 @@ const RegisterForm = () => {
           )}
         </div>
 
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="group_link">
-            Group Link (optional)
-          </label>
-          <input
-            id="group_link"
-            type="url"
-            className="w-full rounded border border-gray-300 p-2"
-            {...register("group_link")}
-          />
-        </div>
+        {isOrganizer && (
+          <div className="animate-fade-in mb-4">
+            <label className="mb-2 block text-gray-700" htmlFor="group_link">
+              Link do grupy (opcjonalne)
+            </label>
+            <input
+              id="group_link"
+              type="url"
+              className="w-full rounded border border-gray-300 p-2"
+              {...register("group_link")}
+            />
+          </div>
+        )}
 
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="facebook_link">
-            Facebook Link (optional)
-          </label>
-          <input
-            id="facebook_link"
-            type="url"
-            className="w-full rounded border border-gray-300 p-2"
-            {...register("facebook_link")}
-          />
-        </div>
+        {isOrganizer && (
+          <div className="animate-fade-in mb-4">
+            <label className="mb-2 block text-gray-700" htmlFor="facebook_link">
+              Link do Facebooka (opcjonalne)
+            </label>
+            <input
+              id="facebook_link"
+              type="url"
+              className="w-full rounded border border-gray-300 p-2"
+              {...register("facebook_link")}
+            />
+          </div>
+        )}
 
         <div className="mb-4">
           <label className="mb-2 block text-gray-700" htmlFor="password">
-            Password
+            Hasło
           </label>
           <input
             id="password"
@@ -204,10 +252,10 @@ const RegisterForm = () => {
               errors.password ? "border-red-500" : "border-gray-300"
             }`}
             {...register("password", {
-              required: "Password is required",
+              required: "Hasło jest wymagane",
               minLength: {
                 value: 6,
-                message: "Password must be at least 6 characters",
+                message: "Hasło musi mieć conajnmniej 6 znaków",
               },
             })}
           />
@@ -220,7 +268,7 @@ const RegisterForm = () => {
 
         <div className="mb-6">
           <label className="mb-2 block text-gray-700" htmlFor="confirmPassword">
-            Confirm Password
+            Potwierdź hasło
           </label>
           <input
             id="confirmPassword"
@@ -229,9 +277,9 @@ const RegisterForm = () => {
               errors.confirmPassword ? "border-red-500" : "border-gray-300"
             }`}
             {...register("confirmPassword", {
-              required: "Please confirm your password",
+              required: "Proszę potwierdź hasło",
               validate: (value) =>
-                value === watch("password") || "Passwords do not match",
+                value === watch("password") || "Hasła się nie zgadzają",
             })}
           />
           {errors.confirmPassword && (

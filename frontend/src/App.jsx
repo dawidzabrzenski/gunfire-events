@@ -19,7 +19,7 @@ function App() {
     <AuthProvider>
       <Router>
         <NavBar />
-        <div className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white">
+        <div className="min-h-screen bg-white text-black transition-colors duration-500 dark:bg-gray-900 dark:text-white">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

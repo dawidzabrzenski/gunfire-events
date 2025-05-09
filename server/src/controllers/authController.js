@@ -61,7 +61,7 @@ const register = async (req, res) => {
     });
 
     const token = uuidv4();
-    await createVerificationToken(4, token);
+    await createVerificationToken(user.id, token);
     await sendVerificationEmail(email, token);
 
     res.status(201).json({
@@ -162,7 +162,9 @@ const resendVerification = async (req, res) => {
       return res.status(404).json({ message: "Nie znaleziono użytkownika" });
 
     if (user.is_verified)
-      return res.status(400).json({ message: "Konto już aktywne" });
+      return res
+        .status(400)
+        .json({ message: "Konto zostało już zweryfikowane" });
 
     const token = uuidv4();
     await upsertVerificationToken(user.id, token);

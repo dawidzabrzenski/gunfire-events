@@ -25,12 +25,16 @@ const LoginForm = () => {
     }
   };
 
+  if (authError === "Konto niezweryfikowane") {
+    navigate("/");
+  }
+
   return (
     <div className="mx-auto mt-10 max-w-md rounded-lg bg-white p-6 shadow-md">
       <h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
 
       {authError && (
-        <div className="mb-4 rounded bg-red-100 p-3 text-red-700">
+        <div className="animate-fade-in mb-4 rounded bg-red-100 p-3 text-red-700">
           {authError}
         </div>
       )}
