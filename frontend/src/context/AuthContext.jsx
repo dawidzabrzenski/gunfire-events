@@ -6,7 +6,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -27,33 +26,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    setError(null);
-    try {
-      const response = await axiosInstance.post("/auth/login", {
-        email,
-        password,
-      });
-      await fetchUserData();
-      return response.data;
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-      throw err;
-    }
+    const response = await axiosInstance.post("/auth/login", {
+      email,
+      password,
+    });
+    await fetchUserData();
+    return response.data;
   };
 
   const register = async (userData) => {
-    setError(null);
-    try {
-      const response = await axiosInstance.post("/auth/register", userData);
-
-      await fetchUserData();
-      return response.data;
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
-      throw err;
-    }
+    const response = await axiosInstance.post("/auth/register", userData);
+    await fetchUserData();
+    return response.data;
   };
-
   const logout = async () => {
     try {
       await axiosInstance.post("/auth/logout");
@@ -78,7 +63,6 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    error,
     login,
     register,
     logout,

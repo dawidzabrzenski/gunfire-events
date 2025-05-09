@@ -12,11 +12,14 @@ const RegisterForm = ({ success }) => {
   } = useForm();
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const { register: registerUser, error: authError } = useAuth();
+  const [registerError, setRegisterError] = useState(null);
+  const { register: registerUser } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     setSubmitting(true);
+    setRegisterError(null);
+
     try {
       const role = isOrganizer ? "organizer" : "user";
       const { confirmPassword, ...userData } = data;
@@ -29,6 +32,7 @@ const RegisterForm = ({ success }) => {
       navigate("/register", { state: { success: true } });
     } catch (error) {
       console.error("Registration error:", error);
+      setRegisterError(error.response?.data?.message || "Registration failed");
     } finally {
       setSubmitting(false);
     }
@@ -51,9 +55,9 @@ const RegisterForm = ({ success }) => {
         Zarejestruj nowego użytkownika
       </h2>
 
-      {authError && (
+      {registerError && (
         <div className="mb-4 rounded bg-red-100 p-3 text-red-700">
-          {authError}
+          {registerError}
         </div>
       )}
 

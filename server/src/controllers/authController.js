@@ -85,7 +85,10 @@ const login = async (req, res) => {
     if (!match) return res.status(401).json({ message: "Nieprawidłowe dane" });
 
     if (!user.is_verified)
-      return res.status(403).json({ message: "Konto niezweryfikowane" });
+      return res.status(403).json({
+        message: "Konto niezweryfikowane.",
+        type: "UNVERIFIED_ACCOUNT",
+      });
 
     if (user.role === "organizer" && !user.is_approved) {
       return res.status(403).json({
