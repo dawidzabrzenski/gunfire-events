@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationEmail = async (email, token) => {
-  const link = `http://localhost:5173/verify-email?token=${token}`;
+  const link = `http://localhost:5173/verify-email?id=${token}`;
 
   await transporter.sendMail({
     to: email,

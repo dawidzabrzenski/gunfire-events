@@ -48,6 +48,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifyEmailToken = async (token) => {
+    try {
+      const response = await axiosInstance.get("/auth/verify-email", {
+        params: { token },
+      });
+      return { type: "success", message: response.data.message };
+    } catch (error) {
+      return {
+        type: "error",
+        message: error.response?.data?.message || "Wystąpił błąd serwera",
+      };
+    }
+  };
+
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get("/auth/me");
@@ -60,12 +74,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const resendVerificationEmail = async (email) => {
+    const response = await axiosInstance.post("/auth/resend-verification", {
+      email,
+    });
+
+    return response.data;
+  };
+
   const value = {
     user,
     loading,
     login,
     register,
     logout,
+    verifyEmailToken,
+    resendVerificationEmail,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

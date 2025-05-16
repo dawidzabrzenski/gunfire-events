@@ -10,7 +10,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import EmailVerification from "./pages/EmailVerification";
+import VerifyForm from "./pages/VerifyForm";
+import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import NavBar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -25,7 +26,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/email-verification" element={<EmailVerification />} />
+            <Route path="/email-verification" element={<VerifyForm />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
             <Route
               element={

@@ -1,9 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
-export default function EmailVerification() {
+export default function VerifyForm() {
   const [submitting, setSubmitting] = useState(false);
   const [response, setResponse] = useState({ type: "", message: "" });
+  const [error, setError] = useState(null);
+  const { resendVerificationEmail } = useAuth();
 
   const {
     register,
@@ -14,11 +17,19 @@ export default function EmailVerification() {
 
   const onSubmit = async (data) => {
     setSubmitting(true);
+    setError(null);
+    setResponse({ type: "", message: "" });
 
     try {
+      const res = await resendVerificationEmail(data.email);
+      setResponse({ type: "success", message: res.message });
       reset();
     } catch (error) {
-      setResponse(error.response?.data?.message || "Registration failed");
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.message || "Wysłanie linku nie powiodło się";
+
+      setResponse({ type: "error", message: errorMessage });
     } finally {
       setSubmitting(false);
     }
@@ -33,7 +44,7 @@ export default function EmailVerification() {
 
         {response.message && (
           <div
-            className={`${response.type === "success" ? "border-green-400 text-green-700" : "border-red-400 text-red-700"} rounded border bg-green-50 bg-red-50 px-4 py-3 text-sm`}
+            className={`${response.type === "success" ? "border-green-400 bg-green-200 text-green-700" : "border-red-400 bg-red-200 text-red-700"} rounded border px-4 py-3 text-sm`}
           >
             {response.message}
           </div>
@@ -55,7 +66,7 @@ export default function EmailVerification() {
               {...register("email", {
                 required: "E-mail jest wymagany",
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$/i,
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: "Niepoprawny format adresu e-mail",
                 },
               })}
