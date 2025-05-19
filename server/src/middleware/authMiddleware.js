@@ -18,4 +18,14 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { authenticateToken, requireAdmin };
+const requireOrganizerOrAdmin = (req, res, next) => {
+  const role = req.user?.role;
+  if (role !== "organizer" && role !== "admin") {
+    return res
+      .status(403)
+      .json({ message: "Brak dostępu - tylko organizator lub admin" });
+  }
+  next();
+};
+
+module.exports = { authenticateToken, requireAdmin, requireOrganizerOrAdmin };

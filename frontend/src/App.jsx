@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import VerifyForm from "./pages/VerifyForm";
 import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
+import AddEvent from "./pages/AddEvent";
 import NavBar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -35,6 +36,12 @@ function App() {
               }
             >
               <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+
+            <Route
+              element={<ProtectedRoute allowedRoles={["admin", "organizer"]} />}
+            >
+              <Route path="/event/add" element={<AddEvent />} />
             </Route>
 
             <Route

@@ -9,6 +9,7 @@ export default function VerifyEmail() {
   const { verifyEmailToken } = useAuth();
   const navigate = useNavigate();
   const hasVerified = useRef(false);
+
   useEffect(() => {
     const token = searchParams.get("id");
     if (!token || hasVerified.current) return;
