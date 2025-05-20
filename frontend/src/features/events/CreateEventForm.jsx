@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createEvent } from "../../features/events/eventApi";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const CreateEventForm = () => {
   const {
@@ -13,6 +14,7 @@ const CreateEventForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -20,20 +22,22 @@ const CreateEventForm = () => {
 
     try {
       console.log(data);
+      console.log(user);
 
-      // const formData = new FormData();
-      // formData.append("title", data.title);
-      // formData.append("description", data.description);
-      // formData.append("category_id", data.category_id);
-      // formData.append("fee", data.fee);
-      // formData.append("city", data.city);
-      // formData.append("postal", data.postal);
-      // formData.append("street", data.street);
-      // formData.append("region", data.region);
-      // formData.append("date", data.date);
-      // formData.append("photo", data.photo[0]);
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("category_id", data.category_id);
+      formData.append("image_url", data.photo[0]);
+      formData.append("fee", data.fee);
+      formData.append("city", data.city);
+      formData.append("postal_code", data.postal);
+      formData.append("street", data.street);
+      formData.append("voivodeship_id", data.voivodeship_id);
+      formData.append("date", data.date);
+      formData.append("organizer_id", user.id);
 
-      // await createEvent(formData);
+      await createEvent(formData);
       reset();
     } catch (err) {
       setSubmitError(
@@ -145,15 +149,43 @@ const CreateEventForm = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Region
+        <div className="mb-4">
+          <label className="mb-2 block text-gray-700" htmlFor="voivodeship_id">
+            Województwo (opcjonalne)
           </label>
-          <input
-            type="text"
-            className="w-full rounded border p-2"
-            {...register("region", { required: "Region jest wymagany" })}
-          />
+          <select
+            id="voivodeship_id"
+            className={`w-full rounded border p-2 ${
+              errors.voivodeship_id ? "border-red-500" : "border-gray-300"
+            }`}
+            {...register("voivodeship_id")}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              -- Wybierz województwo --
+            </option>
+            <option value="1">Dolnośląskie</option>
+            <option value="2">Kujawsko-Pomorskie</option>
+            <option value="3">Lubelskie</option>
+            <option value="4">Lubuskie</option>
+            <option value="5">Łódzkie</option>
+            <option value="6">Małopolskie</option>
+            <option value="7">Mazowieckie</option>
+            <option value="8">Opolskie</option>
+            <option value="9">Podkarpackie</option>
+            <option value="10">Podlaskie</option>
+            <option value="11">Pomorskie</option>
+            <option value="12">Śląskie</option>
+            <option value="13">Świętokrzyskie</option>
+            <option value="14">Warmińsko-Mazurskie</option>
+            <option value="15">Wielkopolskie</option>
+            <option value="16">Zachodniopomorskie</option>
+          </select>
+          {errors.voivodeship_id && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.voivodeship_id.message}
+            </p>
+          )}
         </div>
 
         <div>
