@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { createEvent } from "../../features/events/eventApi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useCategories } from "../categories/useCategories";
+import Map from "../../components/Map";
 
 const CreateEventForm = () => {
   const {
@@ -13,22 +15,22 @@ const CreateEventForm = () => {
   } = useForm();
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
-  const navigate = useNavigate();
+  const { categories, isCategoriesPending } = useCategories();
   const { user } = useAuth();
 
-  const onSubmit = async (data) => {
+  async function onSubmit(data) {
     setSubmitting(true);
     setSubmitError(null);
 
     try {
-      console.log(data);
-      console.log(user);
-
       const formData = new FormData();
+
+      console.log(data);
+
       formData.append("title", data.title);
       formData.append("description", data.description);
       formData.append("category_id", data.category_id);
-      formData.append("image_url", data.photo[0]);
+      formData.append("photo", data.photo[0]);
       formData.append("fee", data.fee);
       formData.append("city", data.city);
       formData.append("postal_code", data.postal);
@@ -46,7 +48,7 @@ const CreateEventForm = () => {
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   return (
     <div className="mx-auto mt-10 max-w-2xl rounded-lg bg-white p-6 shadow-md">
@@ -87,18 +89,24 @@ const CreateEventForm = () => {
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Kategoria
-          </label>
-          <input
-            type="number"
-            className="w-full rounded border p-2"
-            {...register("category_id", {
-              required: "Kategoria jest wymagana",
-            })}
-          />
-        </div>
+        {!isCategoriesPending && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Kategoria
+            </label>
+            <select
+              className="border-1 w-full rounded border-black py-2"
+              {...register("category_id")}
+              defaultValue=""
+            >
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -110,6 +118,10 @@ const CreateEventForm = () => {
             className="w-full rounded border p-2"
             {...register("fee", { required: "Opłata jest wymagana" })}
           />
+        </div>
+
+        <div className="max-w-full overflow-hidden text-center">
+          <Map />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -181,11 +193,6 @@ const CreateEventForm = () => {
             <option value="15">Wielkopolskie</option>
             <option value="16">Zachodniopomorskie</option>
           </select>
-          {errors.voivodeship_id && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.voivodeship_id.message}
-            </p>
-          )}
         </div>
 
         <div>
@@ -207,7 +214,7 @@ const CreateEventForm = () => {
             type="file"
             accept="image/*"
             className="w-full"
-            {...register("photo", { required: "Zdjęcie jest wymagane" })}
+            {...register("photo")}
           />
           {errors.photo && (
             <p className="text-sm text-red-500">{errors.photo.message}</p>

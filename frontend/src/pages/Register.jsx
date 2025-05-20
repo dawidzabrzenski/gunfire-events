@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import RegisterForm from "../components/auth/RegisterForm";
+import RegisterForm from "../features/auth/RegisterForm";
 
 const Register = () => {
   const location = useLocation();

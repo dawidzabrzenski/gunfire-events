@@ -8,13 +8,21 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.multipart = (url, formData) => {
+  return axiosInstance.post(url, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 axiosInstance.interceptors.request.use(
   (config) => {
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 axiosInstance.interceptors.response.use(
@@ -26,7 +34,7 @@ axiosInstance.interceptors.response.use(
       console.log("Authentication error");
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

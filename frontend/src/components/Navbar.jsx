@@ -15,13 +15,13 @@ const NavBar = () => {
 
   return (
     <nav className="bg-black text-white shadow-md">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 font-bold text-xl">
+            <Link to="/" className="flex-shrink-0 text-xl font-bold">
               Gunfire Events
             </Link>
-            <div className="hidden md:block ml-10">
+            <div className="ml-10 hidden md:block">
               <div className="flex items-center space-x-4">
                 <Link to="/">Strona Główna</Link>
               </div>
@@ -34,6 +34,9 @@ const NavBar = () => {
               {user ? (
                 <>
                   <Link to="/dashboard">Dashboard</Link>
+                  {["admin", "organizer"].includes(user.role) && (
+                    <Link to="/event/add">Dodaj wydarzenie</Link>
+                  )}
                   <button onClick={handleLogout}>Wyloguj</button>
                 </>
               ) : (
@@ -48,7 +51,7 @@ const NavBar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md hover:bg-blue-700 focus:outline-none"
+              className="inline-flex items-center justify-center rounded-md p-2 hover:bg-blue-700 focus:outline-none"
             >
               <svg
                 className="h-6 w-6"
@@ -79,10 +82,10 @@ const NavBar = () => {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3 md:hidden">
           <Link
             to="/"
-            className="block px-3 py-2 rounded-md hover:bg-blue-700"
+            className="block rounded-md px-3 py-2 hover:bg-blue-700"
             onClick={() => setMobileMenuOpen(false)}
           >
             Strona Główna
@@ -92,7 +95,7 @@ const NavBar = () => {
             <>
               <Link
                 to="/dashboard"
-                className="block px-3 py-2 rounded-md hover:bg-blue-700"
+                className="block rounded-md px-3 py-2 hover:bg-blue-700"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Dashboard
@@ -102,7 +105,7 @@ const NavBar = () => {
                   handleLogout();
                   setMobileMenuOpen(false);
                 }}
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-blue-700"
+                className="block w-full rounded-md px-3 py-2 text-left hover:bg-blue-700"
               >
                 Wyloguj
               </button>
@@ -111,14 +114,14 @@ const NavBar = () => {
             <>
               <Link
                 to="/login"
-                className="block px-3 py-2 rounded-md hover:bg-blue-700"
+                className="block rounded-md px-3 py-2 hover:bg-blue-700"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="block px-3 py-2 rounded-md bg-white text-blue-600 hover:bg-gray-100"
+                className="block rounded-md bg-white px-3 py-2 text-blue-600 hover:bg-gray-100"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Register
