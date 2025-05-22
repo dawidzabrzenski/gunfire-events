@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/events", eventRoutes);
+app.use("/api/category", categoryRoutes);
 app.use("/api/auth", authRoutes);
 
 app.listen(process.env.PORT, () =>

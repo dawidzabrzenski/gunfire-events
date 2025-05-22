@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { createEvent } from "../../features/events/eventApi";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+import Map from "../../components/Map/Map";
+
+import { createEvent } from "../../features/events/eventApi";
 import { useAuth } from "../../context/AuthContext";
 import { useCategories } from "../categories/useCategories";
-import Map from "../../components/Map";
 
 const CreateEventForm = () => {
   const {
@@ -12,8 +14,15 @@ const CreateEventForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm();
   const [submitting, setSubmitting] = useState(false);
+  const [address, setAddress] = useState({
+    city: "",
+    postal: "",
+    street: "",
+    voivodeship: null,
+  });
   const [submitError, setSubmitError] = useState(null);
   const { categories, isCategoriesPending } = useCategories();
   const { user } = useAuth();
@@ -26,21 +35,22 @@ const CreateEventForm = () => {
       const formData = new FormData();
 
       console.log(data);
+      console.log(address);
 
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-      formData.append("category_id", data.category_id);
-      formData.append("photo", data.photo[0]);
-      formData.append("fee", data.fee);
-      formData.append("city", data.city);
-      formData.append("postal_code", data.postal);
-      formData.append("street", data.street);
-      formData.append("voivodeship_id", data.voivodeship_id);
-      formData.append("date", data.date);
-      formData.append("organizer_id", user.id);
+      // formData.append("title", data.title);
+      // formData.append("description", data.description);
+      // formData.append("category_id", data.category_id);
+      // formData.append("photo", data.photo[0]);
+      // formData.append("fee", data.fee);
+      // formData.append("city", data.city);
+      // formData.append("postal_code", data.postal);
+      // formData.append("street", data.street);
+      // formData.append("voivodeship_id", data.voivodeship_id);
+      // formData.append("date", data.date);
+      // formData.append("organizer_id", user.id);
 
-      await createEvent(formData);
-      reset();
+      // await createEvent(formData);
+      // reset();
     } catch (err) {
       setSubmitError(
         err.response?.data?.message || "Błąd podczas tworzenia wydarzenia",
@@ -121,7 +131,7 @@ const CreateEventForm = () => {
         </div>
 
         <div className="max-w-full overflow-hidden text-center">
-          <Map />
+          <Map handleSetAddress={setAddress} handleSetFormData={setValue} />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
