@@ -10,6 +10,17 @@ const getAllEvents = async (req, res) => {
   }
 };
 
+const getEventsByParams = async (req, res) => {
+  try {
+    const params = req.query;
+    const result = await eventModel.findByParams(params);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getEventById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -39,15 +50,13 @@ const createEvent = async (req, res) => {
   try {
     const photo = req.file ? `/uploads/${req.file.filename}` : null;
 
-    const event = {
+    const eventData = {
       ...req.body,
-      photo,
+      image_url: req.file ? `/uploads/${req.file.filename}` : null,
       organizer_id: req.user.id,
     };
 
-    const eventData = req.body;
-
-    if (!eventData.title || !eventData.date || !eventData.organizer_id) {
+    if (!eventData.title || !eventData.date) {
       return res.status(400).json({ message: "Brak wymaganych pól" });
     }
 
@@ -61,6 +70,7 @@ const createEvent = async (req, res) => {
 
 module.exports = {
   createEvent,
+  getEventsByParams,
   getAllEvents,
   getEventById,
 };
