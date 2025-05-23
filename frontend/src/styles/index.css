@@ -8,3 +8,31 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", sans-serif;
 }
+
+@theme {
+  /* Kolory ogólne */
+  --color-text: #000000;
+  --color-text-muted: #4b5563; /* szary do mniej ważnych tekstów */
+
+  --color-bg-main: #ffffff; /* tło całej strony */
+  --color-bg-surface: #f3f4f6; /* np. boxy na stronie, delikatna szarość */
+  --color-border: #d1d5db;
+
+  /* Sekcje */
+  --color-bg-navbar: #000000;
+  --color-bg-footer: #000000;
+  --color-text-inverted: #ffffff;
+}
+
+@theme .dark {
+  --color-text: #ffffff;
+  --color-text-muted: #9ca3af;
+
+  --color-bg-main: #0f0f0f;
+  --color-bg-surface: #1f1f1f;
+  --color-border: #3f3f46;
+
+  --color-bg-navbar: #111111;
+  --color-bg-footer: #111111;
+  --color-text-inverted: #ffffff;
+}
