@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { createEvent, getAllEvents } = require("../controllers/eventController");
+const {
+  createEvent,
+  getAllEvents,
+  getEventById,
+} = require("../controllers/eventController");
 const {
   authenticateToken,
   requireOrganizerOrAdmin,
@@ -8,6 +12,7 @@ const {
 const upload = require("../utils/multer");
 
 router.get("/findAll", getAllEvents);
+router.get("/findById/:id", getEventById);
 router.post(
   "/create",
   authenticateToken,

@@ -3,10 +3,35 @@ const eventModel = require("../models/eventModel");
 const getAllEvents = async (req, res) => {
   try {
     const events = await eventModel.findAll();
-    res.status(200).json({ events });
+    res.status(200).json(events);
   } catch (error) {
     console.error("Błąd pobierania eventów:", error);
     res.status(500).json({ message: "Błąd serwera" });
+  }
+};
+
+const getEventById = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({ message: "Brak parametru id" });
+    }
+
+    if (isNaN(Number(id))) {
+      return res.status(400).json({ message: "Niepoprawny format id" });
+    }
+
+    const event = await eventModel.findById(id);
+
+    if (!event) {
+      return res.status(404).json({ message: "Event nie znaleziony" });
+    }
+
+    return res.status(200).json(event);
+  } catch (error) {
+    console.error("Błąd pobierania eventów:", error);
+    return res.status(500).json({ message: "Błąd serwera" });
   }
 };
 
@@ -37,4 +62,5 @@ const createEvent = async (req, res) => {
 module.exports = {
   createEvent,
   getAllEvents,
+  getEventById,
 };

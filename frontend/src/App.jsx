@@ -14,8 +14,9 @@ import VerifyForm from "./pages/VerifyForm";
 import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import AddEvent from "./pages/AddEvent";
-import NavBar from "./components/Navbar";
-import Footer from "./components/Footer";
+import NavBar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
+import EventPage from "./pages/EventPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/email-verification" element={<VerifyForm />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/event" element={<EventPage />} />
 
             <Route
               element={

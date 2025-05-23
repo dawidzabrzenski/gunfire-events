@@ -37,20 +37,20 @@ const CreateEventForm = () => {
       console.log(data);
       console.log(address);
 
-      // formData.append("title", data.title);
-      // formData.append("description", data.description);
-      // formData.append("category_id", data.category_id);
-      // formData.append("photo", data.photo[0]);
-      // formData.append("fee", data.fee);
-      // formData.append("city", data.city);
-      // formData.append("postal_code", data.postal);
-      // formData.append("street", data.street);
-      // formData.append("voivodeship_id", data.voivodeship_id);
-      // formData.append("date", data.date);
-      // formData.append("organizer_id", user.id);
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("category_id", data.category_id);
+      formData.append("photo", data.photo[0]);
+      formData.append("fee", data.fee);
+      formData.append("city", data.city);
+      formData.append("postal_code", data.postal);
+      formData.append("street", data.street);
+      formData.append("voivodeship_id", data.voivodeship_id);
+      formData.append("date", data.date);
+      formData.append("organizer_id", user.id);
 
-      // await createEvent(formData);
-      // reset();
+      await createEvent(formData);
+      reset();
     } catch (err) {
       setSubmitError(
         err.response?.data?.message || "Błąd podczas tworzenia wydarzenia",
