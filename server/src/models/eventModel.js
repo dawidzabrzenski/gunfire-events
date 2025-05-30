@@ -107,9 +107,11 @@ module.exports = {
       organizer_id,
       fps,
       status = "pending_verification",
+      latitude,
+      longitude,
     } = event;
     const res = await pool.query(
-      "INSERT INTO events (title, description, image_url, category_id, fee, city, postal_code, street, voivodeship_id, date, organizer_id, fps, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *",
+      "INSERT INTO events (title, description, image_url, category_id, fee, city, postal_code, street, voivodeship_id, date, organizer_id, fps, status, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *",
       [
         title,
         description,
@@ -124,6 +126,8 @@ module.exports = {
         organizer_id,
         fps,
         status,
+        latitude,
+        longitude,
       ]
     );
     return res.rows[0];

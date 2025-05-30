@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Popover } from "@headlessui/react";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
@@ -49,8 +49,8 @@ function DatePopover({ date, dateFrom, dateTo, onChange }) {
       <Popover className="relative w-full max-w-md">
         {({ close }) => (
           <>
-            <Popover.Button className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-left shadow-sm transition hover:ring-2 hover:ring-blue-500">
-              <span className="mb-1 block text-sm font-medium text-gray-700">
+            <PopoverButton className="border-border-surface w-full rounded-lg border px-4 py-2 text-left shadow-sm transition hover:ring-2 hover:ring-blue-500">
+              <span className="text-text-main mb-1 block text-sm font-medium">
                 Zakres dat
               </span>
               <span className="text-gray-900">
@@ -60,12 +60,12 @@ function DatePopover({ date, dateFrom, dateTo, onChange }) {
                   <span className="text-gray-400">Wybierz zakres</span>
                 )}
               </span>
-            </Popover.Button>
+            </PopoverButton>
 
-            <Popover.Panel className="animate-fade-in animate-duration-100 absolute z-20 mt-2 flex w-[28rem] flex-col justify-center gap-4 rounded-lg bg-white p-4 shadow-lg">
+            <PopoverPanel className="animate-fade-in animate-duration-100 bg-bg-surface border-border-surface border-1 absolute z-20 mt-2 flex w-[28rem] flex-col justify-center gap-4 rounded-lg p-4 shadow-lg">
               <div className="flex gap-4">
                 <div className="flex w-1/2 flex-col">
-                  <label className="mb-1 text-sm font-medium text-gray-700">
+                  <label className="text-text-muted mb-1 text-sm font-medium">
                     Data od
                   </label>
                   <DatePicker
@@ -77,13 +77,13 @@ function DatePopover({ date, dateFrom, dateTo, onChange }) {
                     dateFormat="yyyy-MM-dd"
                     isClearable
                     placeholderText="Data od"
-                    className="w-full rounded border border-gray-300 px-3 py-2"
+                    className="border-border-surface w-full rounded border px-3 py-2"
                     autoFocus
                   />
                 </div>
 
                 <div className="flex w-1/2 flex-col">
-                  <label className="mb-1 text-sm font-medium text-gray-700">
+                  <label className="text-text-muted mb-1 text-sm font-medium">
                     Data do
                   </label>
                   <DatePicker
@@ -96,7 +96,7 @@ function DatePopover({ date, dateFrom, dateTo, onChange }) {
                     dateFormat="yyyy-MM-dd"
                     isClearable
                     placeholderText="Data do"
-                    className="w-full rounded border border-gray-300 px-3 py-2"
+                    className="border-border-surface w-full rounded border px-3 py-2"
                   />
                 </div>
               </div>
@@ -104,19 +104,19 @@ function DatePopover({ date, dateFrom, dateTo, onChange }) {
               <div className="flex justify-end gap-2">
                 <button
                   onClick={() => applyRange(close)}
-                  className="self-end rounded bg-stone-400 px-4 py-2 text-white transition hover:bg-blue-700"
+                  className="hover:bg-gunfire-orange-hover self-end rounded bg-stone-400 px-4 py-2 text-white transition"
                 >
                   Wyczyść
                 </button>
 
                 <button
                   onClick={() => applyRange(close)}
-                  className="self-end rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+                  className="bg-gunfire-orange hover:bg-gunfire-orange-hover self-end rounded px-4 py-2 text-white transition"
                 >
                   Zastosuj
                 </button>
               </div>
-            </Popover.Panel>
+            </PopoverPanel>
           </>
         )}
       </Popover>

@@ -19,30 +19,26 @@ const Dashboard = () => {
         </button>
       </div>
 
-      <div className="mb-6 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+      <div className="bg-bg-surface border-1 border-border mb-6 rounded-lg p-4">
         <h2 className="mb-4 text-xl font-semibold">Twój profil</h2>
         {user && (
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-gray-600 dark:text-gray-400">
-                Imię i nazwisko
-              </p>
+              <p className="text-text-muted">Imię i nazwisko</p>
               <p className="font-medium">
                 {user.first_name} {user.last_name}
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">
-                Nazwa użytkownika
-              </p>
+              <p className="text-text-muted">Nazwa użytkownika</p>
               <p className="font-medium">{user.username}</p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Email</p>
+              <p className="text-text-muted">Email</p>
               <p className="font-medium">{user.email}</p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Rola</p>
+              <p className="text-text-muted">Rola</p>
               <p className="font-medium capitalize">{user.role}</p>
             </div>
           </div>

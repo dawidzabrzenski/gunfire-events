@@ -6,7 +6,7 @@ function ListFilter({ onChange }) {
       <p>Wybierz województwo: </p>
       <select
         defaultValue=""
-        className="border-1 rounded-lg border-stone-300 px-2 py-2"
+        className="border-1 border-border-surface rounded-lg px-2 py-2"
         onChange={(e) => onChange("voivodeship_id", e.target.value)}
       >
         <option value="">Wszystkie</option>

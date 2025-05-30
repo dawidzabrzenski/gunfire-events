@@ -3,7 +3,7 @@ function ListSort({ sortBy, sortOrder, onChange }) {
     <div className="flex items-center gap-2 py-4">
       <p>Sortuj:</p>
       <select
-        className="border-1 rounded-lg border-stone-300 px-2 py-2"
+        className="border-1 border-border-surface rounded-lg px-2 py-2"
         value={sortBy}
         onChange={(e) => onChange("sortBy", e.target.value)}
       >
@@ -13,7 +13,7 @@ function ListSort({ sortBy, sortOrder, onChange }) {
       </select>
 
       <select
-        className="border-1 rounded-lg border-stone-300 px-2 py-2"
+        className="border-1 border-border-surface rounded-lg px-2 py-2"
         value={sortOrder}
         onChange={(e) => onChange("sortOrder", e.target.value)}
       >

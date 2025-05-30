@@ -15,6 +15,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import Dashboard from "./pages/Dashboard";
 import AddEvent from "./pages/AddEvent";
 import NavBar from "./components/common/Navbar";
+import NavBarNew from "./components/common/NavbarNew";
 import Footer from "./components/common/Footer";
 import EventPage from "./pages/EventPage";
 
@@ -23,14 +24,15 @@ function App() {
     <AuthProvider>
       <Router>
         <NavBar />
-        <div className="min-h-screen bg-white text-black transition-colors duration-500 dark:bg-gray-900 dark:text-white">
+        {/* <NavBarNew /> */}
+        <div className="text-text-main bg-bg-main min-h-screen transition-colors duration-500">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/email-verification" element={<VerifyForm />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/event" element={<EventPage />} />
+            <Route path="/event/:id" element={<EventPage />} />
 
             <Route
               element={

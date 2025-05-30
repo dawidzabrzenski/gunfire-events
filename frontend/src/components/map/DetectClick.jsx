@@ -17,7 +17,8 @@ export default function DetectClick({
           const data = await getAddress(e.latlng.lat, e.latlng.lng);
           const addr = data?.address || {};
 
-          console.log(addr);
+          const lat = Number(Number(data.lat).toFixed(5));
+          const lon = Number(Number(data.lon).toFixed(5));
 
           const voivodeship = getVoivodeshipID(addr.state);
 
@@ -26,6 +27,8 @@ export default function DetectClick({
             postal: addr.postcode || "",
             street: (addr.road || "") + " " + (addr.house_number || ""),
             voivodeship: voivodeship || "",
+            latitude: lat,
+            longitude: lon,
           });
 
           handleSetFormData(
@@ -45,6 +48,8 @@ export default function DetectClick({
             postal: "",
             street: "",
             voivodeship: "",
+            latitude: null,
+            longitude: null,
           });
         }
       }, 1500);

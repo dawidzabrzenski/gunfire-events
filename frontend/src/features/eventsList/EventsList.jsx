@@ -41,7 +41,7 @@ function EventsList() {
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="bg-bg-surface mb-2 flex items-center justify-between rounded-lg px-4 py-4">
         <DatePopover
           date={params.date}
           dateFrom={params.date_from}
@@ -61,6 +61,7 @@ function EventsList() {
           data.events.map((event) => (
             <EventCard
               key={event.id}
+              id={event.id}
               title={event.title}
               date={event.date}
               description={event.description}

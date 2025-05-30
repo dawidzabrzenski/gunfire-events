@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import InputField from "./../../components/form/InputField";
 
 const LoginForm = () => {
   const {
@@ -18,7 +19,6 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     setSubmitting(true);
     setLoginError(null);
-
     try {
       await login(data.email, data.password);
       navigate("/dashboard");
@@ -50,54 +50,34 @@ const LoginForm = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="email">
-            E-mail
-          </label>
-          <input
-            id="email"
-            type="email"
-            className={`w-full rounded border p-2 ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("email", {
-              required: "E-mail jest wymagany",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Niepoprawny format adresu e-mail",
-              },
-            })}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div className="mb-6">
-          <label className="mb-2 block text-gray-700" htmlFor="password">
-            Hasło
-          </label>
-          <input
-            id="password"
-            type="password"
-            className={`w-full rounded border p-2 ${
-              errors.password ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("password", {
-              required: "Hasło jest wymagane",
-              minLength: {
-                value: 6,
-                message: "Hasło musi mieć conajnmniej 6 znaków",
-              },
-            })}
-          />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
+        <InputField
+          label="E-mail"
+          name="email"
+          type="email"
+          register={register}
+          required
+          errors={errors}
+          validation={{
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              message: "Niepoprawny format adresu e-mail",
+            },
+          }}
+        />
+        <InputField
+          label="Hasło"
+          name="password"
+          type="password"
+          register={register}
+          required
+          errors={errors}
+          validation={{
+            minLength: {
+              value: 6,
+              message: "Hasło musi mieć conajmniej 6 znaków",
+            },
+          }}
+        />
         <button
           type="submit"
           disabled={submitting}

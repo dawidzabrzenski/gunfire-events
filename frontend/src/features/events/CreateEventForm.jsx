@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-import Map from "../../components/Map/Map";
-
-import { createEvent } from "../../features/events/eventApi";
 import { useAuth } from "../../context/AuthContext";
 import { useCategories } from "../categories/useCategories";
+import { createEvent } from "../../features/events/eventApi";
+
+import InputField from "../../components/form/InputField";
+import Map from "../../components/Map/Map";
+import VoivodeshipsOptions from "../../utils/VoivodeshipsOptions";
 
 const CreateEventForm = () => {
   const {
@@ -17,15 +18,18 @@ const CreateEventForm = () => {
     setValue,
   } = useForm();
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const { user } = useAuth();
+  const { categories, isCategoriesPending } = useCategories();
+
   const [address, setAddress] = useState({
     city: "",
     postal: "",
     street: "",
     voivodeship: null,
+    latitude: null,
+    longitude: null,
   });
-  const [submitError, setSubmitError] = useState(null);
-  const { categories, isCategoriesPending } = useCategories();
-  const { user } = useAuth();
 
   async function onSubmit(data) {
     setSubmitting(true);
@@ -33,9 +37,6 @@ const CreateEventForm = () => {
 
     try {
       const formData = new FormData();
-
-      console.log(data);
-      console.log(address);
 
       formData.append("title", data.title);
       formData.append("description", data.description);
@@ -48,6 +49,8 @@ const CreateEventForm = () => {
       formData.append("voivodeship_id", data.voivodeship_id);
       formData.append("date", data.date);
       formData.append("organizer_id", user.id);
+      formData.append("latitude", address.latitude);
+      formData.append("longitude", address.longitude);
 
       await createEvent(formData);
       reset();
@@ -61,7 +64,7 @@ const CreateEventForm = () => {
   }
 
   return (
-    <div className="mx-auto mt-10 max-w-2xl rounded-lg bg-white p-6 shadow-md">
+    <div className="bg-bg-surface border-border border-1 mx-auto max-w-2xl rounded-lg p-6 shadow-md">
       <h2 className="mb-6 text-center text-2xl font-bold">Dodaj wydarzenie</h2>
 
       {submitError && (
@@ -71,165 +74,108 @@ const CreateEventForm = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Tytuł
-          </label>
-          <input
-            type="text"
-            className="w-full rounded border p-2"
-            {...register("title", { required: "Tytuł jest wymagany" })}
-          />
-          {errors.title && (
-            <p className="text-sm text-red-500">{errors.title.message}</p>
-          )}
-        </div>
+        <InputField
+          label="Tytuł"
+          name="title"
+          register={register}
+          errors={errors}
+          required="Tytuł jest wymagany"
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Opis
-          </label>
-          <textarea
-            className="w-full rounded border p-2"
-            rows={4}
-            {...register("description", { required: "Opis jest wymagany" })}
-          />
-          {errors.description && (
-            <p className="text-sm text-red-500">{errors.description.message}</p>
-          )}
-        </div>
+        <InputField
+          label="Opis"
+          name="description"
+          type="textarea"
+          register={register}
+          errors={errors}
+          required="Opis jest wymagany"
+        />
 
         {!isCategoriesPending && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Kategoria
-            </label>
-            <select
-              className="border-1 w-full rounded border-black py-2"
-              {...register("category_id")}
-              defaultValue=""
-            >
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <InputField
+            label="Kategoria"
+            name="category_id"
+            type="select"
+            register={register}
+            errors={errors}
+            options={categories.map((cat) => ({
+              value: cat.id,
+              label: cat.name,
+            }))}
+          />
         )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Opłata
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            className="w-full rounded border p-2"
-            {...register("fee", { required: "Opłata jest wymagana" })}
-          />
-        </div>
+        <InputField
+          label="Opłata"
+          name="fee"
+          type="number"
+          step="0.01"
+          register={register}
+          errors={errors}
+          required="Opłata jest wymagana"
+        />
 
         <div className="max-w-full overflow-hidden text-center">
           <Map handleSetAddress={setAddress} handleSetFormData={setValue} />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Miasto
-            </label>
-            <input
-              type="text"
-              className="w-full rounded border p-2"
-              {...register("city", { required: "Miasto jest wymagane" })}
-            />
-          </div>
+          <InputField
+            label="Miasto"
+            name="city"
+            register={register}
+            errors={errors}
+            required="Miasto jest wymagane"
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Kod pocztowy
-            </label>
-            <input
-              type="text"
-              className="w-full rounded border p-2"
-              {...register("postal", {
-                required: "Kod pocztowy jest wymagany",
-              })}
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Ulica
-          </label>
-          <input
-            type="text"
-            className="w-full rounded border p-2"
-            {...register("street", { required: "Ulica jest wymagana" })}
+          <InputField
+            label="Kod pocztowy"
+            name="postal"
+            register={register}
+            errors={errors}
+            required="Kod pocztowy jest wymagany"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="voivodeship_id">
-            Województwo (opcjonalne)
-          </label>
-          <select
-            id="voivodeship_id"
-            className={`w-full rounded border p-2 ${
-              errors.voivodeship_id ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("voivodeship_id")}
-            defaultValue=""
-          >
-            <option value="" disabled>
-              -- Wybierz województwo --
-            </option>
-            <option value="1">Dolnośląskie</option>
-            <option value="2">Kujawsko-Pomorskie</option>
-            <option value="3">Lubelskie</option>
-            <option value="4">Lubuskie</option>
-            <option value="5">Łódzkie</option>
-            <option value="6">Małopolskie</option>
-            <option value="7">Mazowieckie</option>
-            <option value="8">Opolskie</option>
-            <option value="9">Podkarpackie</option>
-            <option value="10">Podlaskie</option>
-            <option value="11">Pomorskie</option>
-            <option value="12">Śląskie</option>
-            <option value="13">Świętokrzyskie</option>
-            <option value="14">Warmińsko-Mazurskie</option>
-            <option value="15">Wielkopolskie</option>
-            <option value="16">Zachodniopomorskie</option>
-          </select>
-        </div>
+        <InputField
+          label="Ulica"
+          name="street"
+          register={register}
+          errors={errors}
+          required="Ulica jest wymagana"
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Data
-          </label>
-          <input
-            type="datetime-local"
-            className="w-full rounded border p-2"
-            {...register("date", { required: "Data jest wymagana" })}
-          />
-        </div>
+        <InputField
+          label="Województwo (opcjonalne)"
+          name="voivodeship_id"
+          type="select"
+          register={register}
+          errors={errors}
+          defaultValue=""
+        >
+          <option className="" value="" disabled hidden>
+            Wybierz województwo
+          </option>
+          <VoivodeshipsOptions />
+        </InputField>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Zdjęcie
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            className="w-full"
-            {...register("photo")}
-          />
-          {errors.photo && (
-            <p className="text-sm text-red-500">{errors.photo.message}</p>
-          )}
-        </div>
+        <InputField
+          label="Data"
+          name="date"
+          type="datetime-local"
+          register={register}
+          errors={errors}
+          required="Data jest wymagana"
+        />
+
+        <InputField
+          label="Zdjęcie"
+          name="photo"
+          type="file"
+          accept="image/*"
+          register={register}
+          errors={errors}
+        />
 
         <button
           type="submit"

@@ -1,38 +1,69 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @import "tailwindcss";
 
 @plugin "@midudev/tailwind-animations";
+@plugin "@tailwindcss/line-clamp";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-sans: "Be Vietnam Pro", sans-serif;
 }
 
 @theme {
-  /* Kolory ogólne */
-  --color-text: #000000;
-  --color-text-muted: #4b5563; /* szary do mniej ważnych tekstów */
+  --color-text-main: #000000;
+  --color-text-muted: #4b5563;
 
-  --color-bg-main: #ffffff; /* tło całej strony */
-  --color-bg-surface: #f3f4f6; /* np. boxy na stronie, delikatna szarość */
+  --color-bg-main: #ffffff;
+  --color-bg-surface: #f3f4f6;
+  --color-bg-surface-input: #dadbdd;
+
   --color-border: #d1d5db;
+  --color-border-surface: #9ca3af;
 
-  /* Sekcje */
+  /* Sections */
   --color-bg-navbar: #000000;
   --color-bg-footer: #000000;
   --color-text-inverted: #ffffff;
+
+  /* Errors */
+  --color-text-error: #b91c1c;
+  --color-bg-error: #fee2e2;
+  --color-border-error: #fca5a5;
+
+  --color-gunfire-orange: #fb5104;
+  --color-gunfire-orange-hover: #e14803;
 }
 
-@theme .dark {
-  --color-text: #ffffff;
-  --color-text-muted: #9ca3af;
+@layer theme {
+  .dark {
+    --color-text-main: #f1f1f1;
+    --color-text-muted: #9ca3af;
 
-  --color-bg-main: #0f0f0f;
-  --color-bg-surface: #1f1f1f;
-  --color-border: #3f3f46;
+    --color-bg-main: #0f0f0f;
+    --color-bg-surface: #1f1f1f;
+    --color-bg-surface-input: #353535;
 
-  --color-bg-navbar: #111111;
-  --color-bg-footer: #111111;
-  --color-text-inverted: #ffffff;
+    --color-border: #3f3f46;
+    --color-border-surface: #57575f;
+
+    --color-bg-navbar: #111111;
+    --color-bg-footer: #111111;
+    --color-text-inverted: #ffffff;
+
+    /* Errors */
+    --color-text-error: #fca5a5;
+    --color-bg-error: #581c1c;
+    --color-border-error: #b91c1c;
+  }
+}
+
+.input-error {
+  @apply text-text-error animate-fade-in animate-duration-300 bg-bg-error border-border-error border-1 mt-1 w-fit rounded-lg px-2 py-2 text-sm;
+}
+
+.form-error {
+  @apply text-text-error animate-fade-in animate-duration-300 bg-bg-error border-border-error border-1 mt-1 rounded-lg p-3 text-sm;
 }

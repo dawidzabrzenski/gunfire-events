@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import InputField from "./../../components/form/InputField";
 
 const RegisterForm = ({ success }) => {
   const {
@@ -19,15 +20,12 @@ const RegisterForm = ({ success }) => {
   const onSubmit = async (data) => {
     setSubmitting(true);
     setRegisterError(null);
-
     try {
       const role = isOrganizer ? "organizer" : "user";
       const { confirmPassword, ...userData } = data;
-
       if (userData.voivodeship_id === "") {
         userData.voivodeship_id = null;
       }
-
       await registerUser({ ...userData, role });
       navigate("/register", { state: { success: true } });
     } catch (error) {
@@ -63,236 +61,143 @@ const RegisterForm = ({ success }) => {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-stone-200 py-2">
-          <input
-            checked={isOrganizer}
-            onChange={() => setIsOrganizer((val) => !val)}
+          <InputField
             type="checkbox"
+            name="isOrganizer"
+            register={register}
+            onChange={() => setIsOrganizer((val) => !val)}
             className="size-4"
           />
           <p className="font-bold">Zarejestruj jako organizator</p>
         </div>
+
         <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="mb-2 block text-gray-700" htmlFor="first_name">
-              Imię
-            </label>
-            <input
-              id="first_name"
-              type="text"
-              className={`w-full rounded border p-2 ${
-                errors.first_name ? "border-red-500" : "border-gray-300"
-              }`}
-              {...register("first_name", {
-                required: "Imię jest wymagane",
-              })}
-            />
-            {errors.first_name && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.first_name.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="mb-2 block text-gray-700" htmlFor="last_name">
-              Nazwisko
-            </label>
-            <input
-              id="last_name"
-              type="text"
-              className={`w-full rounded border p-2 ${
-                errors.last_name ? "border-red-500" : "border-gray-300"
-              }`}
-              {...register("last_name", { required: "Nazwisko jest wymagane" })}
-            />
-            {errors.last_name && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.last_name.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="email">
-            Adres e-mail
-          </label>
-          <input
-            id="email"
-            type="email"
-            className={`w-full rounded border p-2 ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("email", {
-              required: "E-mail jest wymagany",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Niepoprawny format adresu e-mail",
-              },
-            })}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="username">
-            Nazwa użytkownika
-          </label>
-          <input
-            id="username"
+          <InputField
+            label="Imię"
+            name="first_name"
             type="text"
-            className={`w-full rounded border p-2 ${
-              errors.username ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("username", {
-              required: "Nazwa użytkownika jest wymagana",
-              minLength: {
-                value: 3,
-                message: "Nazwa użytkownika musi mieć conajmniej 3 znaki",
-              },
-            })}
+            register={register}
+            required
+            errors={errors}
           />
-          {errors.username && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.username.message}
-            </p>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="phone">
-            Numer telefonu (opcjonalne)
-          </label>
-          <input
-            id="phone"
-            type="tel"
-            className={`w-full rounded border p-2 ${
-              errors.phone ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("phone")}
+          <InputField
+            label="Nazwisko"
+            name="last_name"
+            type="text"
+            register={register}
+            required
+            errors={errors}
           />
-          {errors.phone && (
-            <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
-          )}
         </div>
 
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="voivodeship_id">
-            Województwo (opcjonalne)
-          </label>
-          <select
-            id="voivodeship_id"
-            className={`w-full rounded border p-2 ${
-              errors.voivodeship_id ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("voivodeship_id")}
-            defaultValue=""
-          >
-            <option value="" disabled>
-              -- Wybierz województwo --
-            </option>
-            <option value="1">Dolnośląskie</option>
-            <option value="2">Kujawsko-Pomorskie</option>
-            <option value="3">Lubelskie</option>
-            <option value="4">Lubuskie</option>
-            <option value="5">Łódzkie</option>
-            <option value="6">Małopolskie</option>
-            <option value="7">Mazowieckie</option>
-            <option value="8">Opolskie</option>
-            <option value="9">Podkarpackie</option>
-            <option value="10">Podlaskie</option>
-            <option value="11">Pomorskie</option>
-            <option value="12">Śląskie</option>
-            <option value="13">Świętokrzyskie</option>
-            <option value="14">Warmińsko-Mazurskie</option>
-            <option value="15">Wielkopolskie</option>
-            <option value="16">Zachodniopomorskie</option>
-          </select>
-          {errors.voivodeship_id && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.voivodeship_id.message}
-            </p>
-          )}
-        </div>
-
+        <InputField
+          label="Adres e-mail"
+          name="email"
+          type="email"
+          register={register}
+          required
+          errors={errors}
+          validation={{
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              message: "Niepoprawny format adresu e-mail",
+            },
+          }}
+        />
+        <InputField
+          label="Nazwa użytkownika"
+          name="username"
+          type="text"
+          register={register}
+          required
+          errors={errors}
+          validation={{
+            minLength: {
+              value: 3,
+              message: "Nazwa użytkownika musi mieć conajmniej 3 znaki",
+            },
+          }}
+        />
+        <InputField
+          label="Numer telefonu (opcjonalne)"
+          name="phone"
+          type="tel"
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          label="Województwo (opcjonalne)"
+          name="voivodeship_id"
+          type="select"
+          register={register}
+          errors={errors}
+          defaultValue=""
+          options={[
+            { value: "", label: "-- Wybierz województwo --" },
+            { value: "1", label: "Dolnośląskie" },
+            { value: "2", label: "Kujawsko-Pomorskie" },
+            { value: "3", label: "Lubelskie" },
+            { value: "4", label: "Lubuskie" },
+            { value: "5", label: "Łódzkie" },
+            { value: "6", label: "Małopolskie" },
+            { value: "7", label: "Mazowieckie" },
+            { value: "8", label: "Opolskie" },
+            { value: "9", label: "Podkarpackie" },
+            { value: "10", label: "Podlaskie" },
+            { value: "11", label: "Pomorskie" },
+            { value: "12", label: "Śląskie" },
+            { value: "13", label: "Świętokrzyskie" },
+            { value: "14", label: "Warmińsko-Mazurskie" },
+            { value: "15", label: "Wielkopolskie" },
+            { value: "16", label: "Zachodniopomorskie" },
+          ]}
+        />
         {isOrganizer && (
-          <div className="animate-fade-in mb-4">
-            <label className="mb-2 block text-gray-700" htmlFor="group_link">
-              Link do grupy (opcjonalne)
-            </label>
-            <input
-              id="group_link"
-              type="url"
-              className="w-full rounded border border-gray-300 p-2"
-              {...register("group_link")}
-            />
-          </div>
+          <InputField
+            label="Link do grupy (opcjonalne)"
+            name="group_link"
+            type="url"
+            register={register}
+            errors={errors}
+            className="animate-fade-in"
+          />
         )}
-
         {isOrganizer && (
-          <div className="animate-fade-in mb-4">
-            <label className="mb-2 block text-gray-700" htmlFor="facebook_link">
-              Link do Facebooka (opcjonalne)
-            </label>
-            <input
-              id="facebook_link"
-              type="url"
-              className="w-full rounded border border-gray-300 p-2"
-              {...register("facebook_link")}
-            />
-          </div>
+          <InputField
+            label="Link do Facebooka (opcjonalne)"
+            name="facebook_link"
+            type="url"
+            register={register}
+            errors={errors}
+            className="animate-fade-in"
+          />
         )}
-
-        <div className="mb-4">
-          <label className="mb-2 block text-gray-700" htmlFor="password">
-            Hasło
-          </label>
-          <input
-            id="password"
-            type="password"
-            className={`w-full rounded border p-2 ${
-              errors.password ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("password", {
-              required: "Hasło jest wymagane",
-              minLength: {
-                value: 6,
-                message: "Hasło musi mieć conajnmniej 6 znaków",
-              },
-            })}
-          />
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        <div className="mb-6">
-          <label className="mb-2 block text-gray-700" htmlFor="confirmPassword">
-            Potwierdź hasło
-          </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            className={`w-full rounded border p-2 ${
-              errors.confirmPassword ? "border-red-500" : "border-gray-300"
-            }`}
-            {...register("confirmPassword", {
-              required: "Proszę potwierdź hasło",
-              validate: (value) =>
-                value === watch("password") || "Hasła się nie zgadzają",
-            })}
-          />
-          {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.confirmPassword.message}
-            </p>
-          )}
-        </div>
-
+        <InputField
+          label="Hasło"
+          name="password"
+          type="password"
+          register={register}
+          required
+          errors={errors}
+          validation={{
+            minLength: {
+              value: 6,
+              message: "Hasło musi mieć conajmniej 6 znaków",
+            },
+          }}
+        />
+        <InputField
+          label="Potwierdź hasło"
+          name="confirmPassword"
+          type="password"
+          register={register}
+          required
+          errors={errors}
+          validation={{
+            validate: (value) =>
+              value === watch("password") || "Hasła się nie zgadzają",
+          }}
+        />
         <button
           type="submit"
           disabled={submitting}

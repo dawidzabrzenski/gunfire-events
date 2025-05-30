@@ -11,8 +11,14 @@ import DetectLocationButton from "./DetectLocationButton";
 
 import "leaflet/dist/leaflet.css";
 
-function Map({ handleSetAddress, handleSetFormData }) {
-  const [mapPosition, setMapPosition] = useState([40, 0]);
+function Map({
+  handleSetAddress,
+  handleSetFormData,
+  readonly = false,
+  initialPosition = null,
+}) {
+  const [mapPosition, setMapPosition] = useState(initialPosition || [40, 0]);
+
   const {
     isLoading: isLoadingPosition,
     position: geolocationPosition,
@@ -21,36 +27,51 @@ function Map({ handleSetAddress, handleSetFormData }) {
   } = useGeolocation();
 
   useEffect(() => {
-    if (geolocationPosition) {
+    if (!readonly && geolocationPosition) {
       setMapPosition([geolocationPosition.lat, geolocationPosition.lng]);
     }
-  }, [geolocationPosition]);
+  }, [geolocationPosition, readonly]);
+
+  useEffect(() => {
+    if (readonly && initialPosition) {
+      setMapPosition(initialPosition);
+    }
+  }, [initialPosition, readonly]);
 
   return (
     <div>
       <MapContainer
         center={mapPosition}
-        zoom={6}
+        zoom={readonly && initialPosition ? 14 : 6}
         scrollWheelZoom={true}
         style={{ height: "500px", width: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        {geolocationPosition && (
+
+        {readonly && initialPosition && (
+          <UserLocationMarker
+            position={{ lat: initialPosition[0], lng: initialPosition[1] }}
+          />
+        )}
+
+        {!readonly && geolocationPosition && (
           <UserLocationMarker position={geolocationPosition} />
         )}
 
-        <DetectClick
-          getAddress={getAddress}
-          getVoivodeshipID={getVoivodeshipID}
-          handleSetAddress={handleSetAddress}
-          handleSetFormData={handleSetFormData}
-        />
+        {!readonly && (
+          <DetectClick
+            getAddress={getAddress}
+            getVoivodeshipID={getVoivodeshipID}
+            handleSetAddress={handleSetAddress}
+            handleSetFormData={handleSetFormData}
+          />
+        )}
       </MapContainer>
 
-      {!geolocationPosition && (
+      {!readonly && !geolocationPosition && (
         <DetectLocationButton
           isLoading={isLoadingPosition}
           onClick={getPosition}
