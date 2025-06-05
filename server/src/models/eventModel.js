@@ -109,9 +109,10 @@ module.exports = {
       status = "pending_verification",
       latitude,
       longitude,
+      max_participants,
     } = event;
     const res = await pool.query(
-      "INSERT INTO events (title, description, image_url, category_id, fee, city, postal_code, street, voivodeship_id, date, organizer_id, fps, status, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *",
+      "INSERT INTO events (title, description, image_url, category_id, fee, city, postal_code, street, voivodeship_id, date, organizer_id, fps, status, latitude, longitude, max_participants) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *",
       [
         title,
         description,
@@ -131,5 +132,37 @@ module.exports = {
       ]
     );
     return res.rows[0];
+  },
+
+  checkUserSignup: async (userId, eventId) => {
+    const res = await pool.query(
+      "SELECT * FROM event_signups WHERE user_id = $1 AND event_id = $2",
+      [userId, eventId]
+    );
+    return res.rows.length > 0;
+  },
+
+  createSignup: async (userId, eventId) => {
+    const res = await pool.query(
+      "INSERT INTO event_signups (user_id, event_id) VALUES ($1, $2) RETURNING *",
+      [userId, eventId]
+    );
+    return res.rows[0];
+  },
+
+  checkUserSignup: async (userId, eventId) => {
+    const res = await pool.query(
+      "SELECT 1 FROM event_signups WHERE user_id = $1 AND event_id = $2",
+      [userId, eventId]
+    );
+    return res.rowCount > 0;
+  },
+
+  countSignups: async (eventId) => {
+    const result = await db.query(
+      "SELECT COUNT(*) FROM event_signups WHERE event_id = $1",
+      [eventId]
+    );
+    return parseInt(result.rows[0].count, 10);
   },
 };
